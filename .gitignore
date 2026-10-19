@@ -1,0 +1,11 @@
+node_modules
+
+# Build output and generated Prisma client
+/dist
+/src/generated
+
+# Keep environment variables out of version control
+.env
+
+# Firebase service account keys
+service-account*.json

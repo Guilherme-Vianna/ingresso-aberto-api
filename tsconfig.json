@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    // NestJS resolves constructor dependencies and DTO types from decorator metadata.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "noEmit": true
+  },
+  "include": ["src", "prisma.config.ts"]
+}

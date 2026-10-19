@@ -1,0 +1,70 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// createdBy / updatedBy hold the Firebase email of the authenticated user.
+// There is no users table: identities live in Firebase.
+
+// Foreign keys exist, but deletes never cascade or block (onDelete: SetNull).
+// Referential cleanup and integrity are handled at the application level.
+
+model Event {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  code      String
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdBy String?  @map("created_by")
+  updatedBy String?  @map("updated_by")
+
+  tickets   EventTicket[]
+  purchases TicketPurchase[]
+
+  @@map("events")
+}
+
+model EventTicket {
+  id          String   @id @default(uuid()) @db.Uuid
+  eventId     String?  @map("event_id") @db.Uuid
+  name        String
+  code        String
+  price       Int
+  maxQuantity Int      @map("max_quantity")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdBy   String?  @map("created_by")
+  updatedBy   String?  @map("updated_by")
+
+  event     Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  purchases TicketPurchase[]
+
+  @@map("event_tickets")
+}
+
+model TicketPurchase {
+  id             String   @id @default(uuid()) @db.Uuid
+  eventId        String?  @map("event_id") @db.Uuid
+  ticketId       String?  @map("ticket_id") @db.Uuid
+  code           String
+  buyerFirstName String   @map("buyer_first_name")
+  buyerLastName  String   @map("buyer_last_name")
+  cpf            String
+  rg             String
+  address        String
+  price          Int
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  event  Event?       @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  ticket EventTicket? @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  @@map("ticket_purchases")
+}
